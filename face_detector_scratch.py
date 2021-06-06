@@ -1,14 +1,17 @@
 import time
+from get_hog import get_hog
 import numpy as np
 import cv2
-from CV2HOG import hog_feature, composed_hog
+from CV2HOG import hog_feature
 from non_max_suppression import non_max_supperssion
 import os
 from SVM import SVM
 import pickle
 
 
+#training image path
 trainPath = r"C:\Users\leung\Desktop\SVM\code\GUI"
+
 def img_resize(img, width = None, height=None, internal= cv2.INTER_AREA):
     dim = None
     #img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -39,7 +42,7 @@ def face_detector():
     #test 8 #lambda = 0.1
     #test 9 #lambda = 0.001
     #test 10 #lambda = 0.001 iteration = 200
-    model_path = ".\model\svm_model_test10.model"
+    model_path = "model\svm_model_test11.model"
     # lda = LDA(2)
     # lda.fit(feat, labels)
     # X_projected = lda.transform(feat)
@@ -64,23 +67,20 @@ def face_detector():
     # print(features[1])
     # model = SVM()
     # model.fit(feat, labels)
+
     model.showConverge()
-    testPath = r"./testimg"
+    #test image path
+    testPath = r"testimg"
     testImg = os.listdir(testPath)
     print(testImg)
+    
     # print(len(testImg))
     # print(os.path.join(testPath, testImg[1]))
     # initializing variables
-    bboxes = np.zeros([0, 4])
-    confidences = np.zeros([0, 1])
-    image_ids = np.zeros([0, 1])
+    # bboxes = np.zeros([0, 4])
+    # confidences = np.zeros([0, 1])
+    # image_ids = np.zeros([0, 1])
 
-    #confidences = model.decision_function(conf_features)
-    # print(confidences)
-    # print(len(confidences))
-    # step size 8 = 63.6; step size 6 = 77.3; step size 4 = 88.6; step size 3 = 88.6 step 5 =  79.5%
-    # h=10, v=3 acc=68.1 fp = 3
-    # h=8, v=3, acc=79.5 fp = 1
 
     # h_stepSize = 30
     # v_stepSize = 30
@@ -90,16 +90,17 @@ def face_detector():
     h_stepSize = 2
     v_stepSize = 2
 
-    #1: 1.6, 2->1.6
+    #detect threshold
     threshold = 0.8
-    file = open("boxes.txt", "w").close()
+
+    # file = open("boxes.txt", "w").close()
     for i in range(len(testImg)):
 
         t0 = time.time()
         scale = 1
         curr_bbox = np.zeros([0, 5])
-        curr_confidence = np.zeros([0, 1])
-        curr_img_idx = np.zeros([0, 1])
+        # curr_confidence = np.zeros([0, 1])
+        # curr_img_idx = np.zeros([0, 1])
         img = cv2.imread(os.path.join(testPath, testImg[i]), 0)
         resizeImg = img_resize(img, width=600)
         colorImg = cv2.imread(os.path.join(testPath, testImg[i]))
@@ -111,8 +112,8 @@ def face_detector():
 
         # loop one image
         winSize = 30
-        cellSize = 2
-        cellNum = 5
+        # cellSize = 2
+        # cellNum = 5
         # print(winSize)H
         # if the shorter side larger than the frame size (30, 30)
         while minLen * scale >= winSize * 3:
@@ -156,6 +157,7 @@ def face_detector():
                         # test image id
                         # curr_img_idx = np.concatenate((curr_img_idx, [[testPath[i]]]), 0)
 
+                    #For illustration
                     # clone = imgResize.copy()
                     # cv2.rectangle(clone, (int(j / scale), int(i / scale)), (int((j + winSize) / scale),
                     #                                                         int((i + winSize) / scale)),
@@ -163,6 +165,7 @@ def face_detector():
                     # cv2.imshow("Window", clone)
                     # cv2.waitKey(1)
                     # time.sleep(0.00025)
+
             scale = scale * downSample
             # print(scale)
 

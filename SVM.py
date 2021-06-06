@@ -1,15 +1,7 @@
 import numpy as np
-import pandas as pd
 from tqdm import tqdm
-##test required libs###
-import cmath
-import os
-import cv2
-from CV2HOG import hog_feature
 import matplotlib.pyplot as plt
-from LDA import LDA
 import random
-#######################
 class SVM:
     def __init__(self, learning_rate = 0.0001, lambda_param = 0.001, n_iters=200):
         self.lr = learning_rate
@@ -24,7 +16,8 @@ class SVM:
         y_ = np.where(y <= 0, -1, 1)
 
         n_samples, n_features = X.shape
-        print(n_features)
+        print("no. of features per img: "+ str(n_features))
+        print("no. of training iterations: "+ str(self.n_iters))
         self.w = np.zeros(n_features)
         self.b = 0
         #gradient
@@ -67,60 +60,3 @@ class SVM:
         plt.show()
 
 
-# root = r"E:\dataset"
-# categories = ["negative", "positive"]
-# imgPathDir={}
-# filePath = []
-# data = []
-# for category in categories:
-#     path = os.path.join(root, category)
-#     files = os.listdir(path)
-#     label = categories.index(category)
-#
-#     imgPathDir[category]=None
-#     for file in files:
-#         filePath.append(file)
-#         imgPathDir[category] = filePath
-#         filePath = []
-#         for key, value in enumerate(imgPathDir[category]):
-#             imgValue = cv2.imread(os.path.join(path,value), 0)
-#             imgValue = cv2.resize(imgValue,(30,30))
-#
-#             #imgValue = imgValue.flatten()
-#             #data.append([imgValue, label])
-#             hog = hog_feature().compute(imgValue).flatten()
-#             data.append([hog, label])
-#
-# features =[]
-# labels =[]
-# for feature, y in data:
-#     features.append(feature)
-#     labels.append(y)
-# features = np.array(features)
-# labels = np.array(labels)
-# #print(labels)
-# lda = LDA(2)
-# lda.fit(features,labels)
-# X_projected = lda.transform(features)
-#
-# print('Shape of X:', features.shape)
-# print('Shape of transformed X:', X_projected.shape)
-#
-# # x1 = X_projected[:, 0]
-# # # x2 = X_projected[:, 1]
-# # #
-# # # plt.scatter(x1, x2,
-# # #         c=labels, edgecolor='none', alpha=0.8,
-# # #         cmap=plt.cm.get_cmap('viridis', 3))
-# # #
-# # # plt.xlabel('Linear Discriminant 1')
-# # # plt.ylabel('Linear Discriminant 2')
-# # # plt.colorbar()
-# # # plt.show()
-# y = np.where(labels==0, -1, 1)
-# clf = SVM()
-# clf.fit(X_projected, y)
-# print(clf.w, clf.b)
-# complexResult = clf.predict(X_projected[77])
-# print(complexResult)
-# print(type(complexResult))
